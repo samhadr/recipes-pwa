@@ -1,0 +1,11 @@
+{
+  "body": "{\"title\":\"New Recipe Title 02\",\"ingredients\":\"ingredient 01, ingredient 02, ingredient 03\",\"instructions\":\"Mix all ingredients together, pour into a bowl, and serve.\",\"attachment\":\"new.jpg\"}",
+  "pathParameters": {
+    "id": "226d0200-6a74-11e8-a874-ffcddc46ecc4"
+  },
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "57d171e2-7304-4756-ac65-36e87c45866c"
+    }
+  }
+}
