@@ -32,9 +32,6 @@
     "sass": "^1.16.1"
   },
   "dependencies": {
-    "assemble": "^0.24.3",
-    "aws-amplify": "^1.1.19",
-    "grunt": "^0.4.5",
-    "styles": "^0.2.1"
+    "aws-amplify": "^1.1.19"
   }
 }
