@@ -1,4 +1,4 @@
-# recipes-expo
+# recipes-pwa
 This is a progressive web application built with React.
 
 ## Dependencies

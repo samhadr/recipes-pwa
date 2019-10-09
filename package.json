@@ -32,11 +32,9 @@
     "sass": "^1.16.1"
   },
   "dependencies": {
-    "assemble": "^0.3.83",
+    "assemble": "^0.24.3",
     "aws-amplify": "^1.1.19",
-    "expo": "^32.0.0",
     "grunt": "^0.4.5",
-    "react-native": "^0.57.8",
     "styles": "^0.2.1"
   }
 }
