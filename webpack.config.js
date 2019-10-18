@@ -16,8 +16,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['es2015', 'react', 'stage-0', 'env'],
-            plugins: ['transform-class-properties']
+            presets: ['@babel/react', '@babel/preset-env'],
+            plugins: ['babel-plugin-transform-class-properties']
           }
         },
       },
