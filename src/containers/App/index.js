@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -63,12 +64,15 @@ class App extends Component {
     // }
 
     return (
-      <SignIn
-        authenticate={this.authenticate}
-        user={this.user}
-      />
+      <div>
+        <h1>Recipes</h1>
+        <SignIn
+          authenticate={this.authenticate}
+          user={this.user}
+        />
+      </div>
     )
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export default hot(App);

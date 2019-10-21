@@ -1,6 +1,7 @@
 {
     "presets": [ "@babel/react", "@babel/preset-env" ],
     "plugins": [
+      "react-hot-loader/babel",
       "@babel/plugin-proposal-object-rest-spread",
       "@babel/plugin-transform-react-jsx",
       "@babel/plugin-transform-react-jsx-source"

@@ -1,12 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'production',
-  entry: './src/index.js',
+  mode: 'development',
+  entry: ['./src/index.js'],
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'index.js',
-    libraryTarget: 'commonjs2'
+    filename: 'main.js',
   },
   module: {
     rules: [{
@@ -17,7 +16,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/react', '@babel/preset-env'],
-            plugins: ['babel-plugin-transform-class-properties']
+            plugins: ['react-hot-loader/babel', 'babel-plugin-transform-class-properties']
           }
         },
       },
@@ -39,12 +38,14 @@ module.exports = {
       }
     ]
   },
-  externals: {
-    'react': 'commonjs react'
-  },
   resolve: {
     alias: {
       assets: path.resolve('./img'), // Makes it easier to reference our assets in jsx files
     },
   },
+  devServer: {
+    contentBase: path.join(__dirname, 'build'),
+    compress: true,
+    port: 3000
+  }
 };
