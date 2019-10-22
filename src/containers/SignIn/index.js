@@ -31,7 +31,11 @@ class SignIn extends Component {
     return email.length > 0 && password.length > 0;
   }
 
-  onChangeText = (key, value) => {
+  onChangeText = (key, event) => {
+    const target = event.target;
+    const value = target.value;
+    // console.log('key: ', key);
+    // console.log('value: ', value);
     this.setState({
       [key]: value
     });
@@ -66,6 +70,7 @@ class SignIn extends Component {
 
   render() {
     const { email, password, showSignInError } = this.state;
+    // console.log('email: ', email);
 
     return (
       <div id="sign-in">

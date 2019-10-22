@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "captcha-define-challenge"
+    ],
+    "parentResource": "recipespwa",
+    "functionName": "recipespwaDefineAuthChallenge",
+    "parentStack": "auth",
+    "triggerEnvs": "[]",
+    "triggerTemplate": "DefineAuthChallenge.json.ejs",
+    "roleName": "recipespwaDefineAuthChallenge",
+    "skipEdit": true,
+    "resourceName": "recipespwaDefineAuthChallenge"
+}
