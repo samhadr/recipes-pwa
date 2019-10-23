@@ -2,6 +2,11 @@
   display: flex;
   background: #fff;
   margin: 0 auto 1rem;
+  color: #333;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   .thumb {
     width: 100px;

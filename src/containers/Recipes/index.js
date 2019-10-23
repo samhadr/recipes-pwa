@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Router, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { API } from "aws-amplify";
@@ -18,23 +18,29 @@ class Recipes extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // isAuthenticated: false,
       isLoading: true,
       recipesData: [],
       recipesImgPaths: []
     }
-    this.getRecipes = this.getRecipes.bind(this);
   }
 
-  // Update on navigating back from Recipe
-  // willFocus = this.props.navigation.addListener(
-  //   'willFocus',
-  //   payload => {
-  //     this.handleRecipes();
-  //   }
-  // );
-
   componentDidMount() {
-    this.handleRecipes();
+    let recipes = sessionStorage.getItem('recipes'),
+        imgPaths = sessionStorage.getItem('imgPaths');
+
+    if (recipes) {
+      recipes = JSON.parse(recipes);
+      imgPaths = JSON.parse(imgPaths);
+      this.setState({
+        recipesData: recipes,
+        recipesImgPaths: imgPaths
+      });
+    } else {
+      this.handleRecipes();
+    }
+
+    this.setState({ isAuthenticated: this.props.isAuthenticated });
   }
 
   async handleRecipes() {
@@ -46,10 +52,11 @@ class Recipes extends Component {
       const recipesData = await this.getRecipes();
       this.setState({ recipesData });
       this.getImgPaths();
+      sessionStorage.setItem('recipes', JSON.stringify(recipesData));
     } catch (e) {
       console.log('recipesData error: ', e);
     }
-  
+
     this.setState({ isLoading: false });
   }
   
@@ -80,91 +87,96 @@ class Recipes extends Component {
       this.setState({
         recipesImgPaths: paths
       });
+      sessionStorage.setItem('imgPaths', JSON.stringify(paths));
     }
   }
 
   renderRecipes = (recipes) => {
     const{ recipesImgPaths } = this.state;
     console.log('recipes: ', recipes);
-    const recipeList = recipes.map((item, i) => {
-      const slug = item.title.toLowerCase().replace(' ', '-'); 
+    return [{}].concat(recipes).map((item, i) =>
+      // const slug = item.title.toLowerCase().replace(' ', '-'); 
       i !== 0
-        ?
-        // <Router key={item.recipeId}>
-          <Link
-            to={`/ ${slug}`}
-            className="recipe-listing"
-            // onClick={this.handleRecipeClick.bind(this, recipe)}
-          >
-            {
-              item.attachment !== null
-              ? <img
-                  className="thumb"
-                  src={recipesImgPaths[i-1]}
-                  // style={recipeStyles.recipeThumb}
-                />
-              : <div /*style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.sageGreen, width: 50, height: 50, marginRight: 10, padding: 10 }}*/>
-                  <Logo />
-                </div>
-            }
-            <div className="recipe-info">
-              <h2>{item.title}</h2>
+      ?
+      <div
+        key={item.recipeId}
+        className="recipe-listing"
+        onClick={this.handleRecipeClick(item)}
+      >
+        {
+          item.attachment !== null
+          ? <img
+              className="thumb"
+              src={recipesImgPaths[i-1]}
+              // style={recipeStyles.recipeThumb}
+            />
+          : <div /*style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.sageGreen, width: 50, height: 50, marginRight: 10, padding: 10 }}*/>
+              <Logo />
             </div>
-          </Link>
-        // </Router>
-        : null
-      });
-    return recipeList;
+        }
+        <div className="recipe-info">
+          <h2>{item.title}</h2>
+        </div>
+      </div>
+      : null
+    )
   }
 
   handleRecipeClick = (recipe) => {
-    this.props.navigation.push('Recipe', { recipe: recipe});
+    console.log('recipe click');
+    const slug = recipe.title.toLowerCase().replace(' ', '-'); 
+    <Redirect to={`/recipes/${slug}`} />
   }
 
-  renderRoutes = () => {
-    const { recipesData } = this.state;
+  // renderRoutes = () => {
+  //   const { recipesData } = this.state;
 
-    return recipesData.length > 0
-    ?
-    recipesData.map((item, i) => {
-      const slug = item.title.toLowerCase().replace(' ', '-');
-      console.log('slug: ', slug);
-      console.log('this.props.path: ', this.props.path);
-      return (
-        this.props.path.includes(this.props.path + '/' + slug)
-        ?
-        (
-          <Route
-            key={i}
-            path={'/recipes/:title'}
-            render={props => <route.component {...props} routes={route.routes} />}
-          />
-        )
-        : null
-      )
-    })
-    :
-    null
-  }
+  //   return recipesData.length > 0
+  //   ?
+  //   recipesData.map((item, i) => {
+  //     const slug = item.title.toLowerCase().replace(' ', '-');
+  //     console.log('slug: ', slug);
+  //     console.log('this.props.path: ', this.props.path);
+  //     return (
+  //       this.props.path.includes(this.props.path + '/' + slug)
+  //       ?
+  //       (
+  //         <Route
+  //           key={i}
+  //           path={'/recipes/:title'}
+  //           render={props => <route.component {...props} />}
+  //         />
+  //       )
+  //       : null
+  //     )
+  //   })
+  //   :
+  //   null
+  // }
 
   render() {
-    const { recipesData, recipesImgPaths } = this.state;
-    console.log('recipesData: ', recipesData);
-    console.log('recipesImgPaths: ', recipesImgPaths);
+    const { recipesData } = this.state;
+    // console.log('recipesData: ', recipesData);
+    // console.log('recipesImgPaths: ', recipesImgPaths);
     const showRecipes = Object.keys(recipesData).length > 0 ? this.renderRecipes(recipesData) : null;
-    const routes = this.renderRoutes();
+    // const routes = this.renderRoutes();
     // console.log('this.props.path: ', this.props.path);
 
     return (
       <div>
-        {this.props.path === '/recipes' ?
-          <div id="recipes">
-            <div onClick={() => this.props.navigation.push('CreateRecipe')}>
-              <p> Add Recipe</p>
-            </div>
-            {showRecipes}
-          </div>
-        : routes}
+      {
+      this.props.isAuthenticated
+      ?
+      <div id="recipes">
+        <div /*onClick={() => this.props.navigation.push('CreateRecipe')}*/>
+          <p> Add Recipe</p>
+        </div>
+        {showRecipes}
+      </div>
+      :
+      <Redirect to="/" />
+      }
+      {/* {routes} */}
       </div>
     );
   }

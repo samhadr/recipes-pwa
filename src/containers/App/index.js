@@ -1,16 +1,15 @@
 import { hot } from 'react-hot-loader/root';
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 
-// import {
-//   BrowserRouter as Router,
-//   Switch,
-//   Route,
-//   Link,
-//   Redirect,
-//   useHistory,
-//   useLocation
-// } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from 'react-router-dom';
 
 import routes from '../../routes';
 
@@ -48,7 +47,7 @@ Amplify.configure({
 
 import SignIn from '../SignIn';
 import Recipes from '../../containers/Recipes';
-// import Test from '../../containers/Test';
+import Test from '../../containers/Test';
 
 import './index.scss';
 
@@ -98,25 +97,68 @@ class App extends Component {
     const { isAuthenticated, currentUser } = this.state;
     // const userEmail = Object.keys(currentUser).length > 0 ? currentUser.signInUserSession.idToken.payload.email : null;
     const checkAuthenticated = !!sessionStorage.getItem('isAuthenticated');
+    // const checkAuth = this.checkAuth();
+
     console.log('App isAuthenticated: ', isAuthenticated);
 
     return (
-      <div id="appWrapper">
+      <Router>
+        <div id="app">
         {
           checkAuthenticated ?
           (
-            routes.map((route, i) => (
-              <Recipes key={i} isAuthenticated={checkAuthenticated} {...route} />
-            )),
-            <Redirect to="/recipes" />
+            <Redirect
+              to={{
+                pathname: "/recipes",
+                state: { isAuthenticated: checkAuthenticated }
+              }}
+            />
+            // <Recipes
+            //   isAuthenticated={checkAuthenticated}
+            // />
           )
           :
+            // <Redirect
+            //   to={{
+            //     pathname: "/sign-in",
+            //     state: {
+            //       authenticate: this.authenticate,
+            //       user: this.user
+            //     }
+            //   }}
+            // />
             <SignIn
               authenticate={this.authenticate}
               user={this.user}
             />
         }
-      </div>
+        {
+          routes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              component={route.component}
+            />
+          ))
+        }
+        </div>
+      </Router>
+      // <div id="appWrapper">
+      //   {
+      //     checkAuthenticated ?
+      //     (
+      //       routes.map((route, i) => (
+      //         <Recipes key={i} isAuthenticated={checkAuthenticated} {...route} />
+      //       )),
+      //       <Redirect to="/recipes" />
+      //     )
+      //     :
+      //       <SignIn
+      //         authenticate={this.authenticate}
+      //         user={this.user}
+      //       />
+      //   }
+      // </div>
     )
   }
 }

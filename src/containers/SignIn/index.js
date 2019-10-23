@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {
+  BrowserRouter as Router,
+  Redirect
+} from 'react-router-dom';
 
 import { Auth } from 'aws-amplify';
 
@@ -49,9 +53,20 @@ class SignIn extends Component {
     .then(dataUser => {
       this.setState({ userData: dataUser });
       console.log('sign in success', dataUser);
+      sessionStorage.setItem('isAuthenticated', true);
     })
     .then(() => authenticate(true))
     .then(() => user(userData))
+    .then(() => {
+      <Router>
+        <Redirect
+          to={{
+            pathname: "/recipes",
+            state: { isAuthenticated: true }
+          }}
+        />
+      </Router>
+    })
     .catch(err => {
       console.log(`sign in ERROR: ${err.message}`, err),
       this.setState({ showSignInError: true })
@@ -70,7 +85,7 @@ class SignIn extends Component {
 
   render() {
     const { email, password, showSignInError, userData } = this.state;
-    console.log('userData: ', userData);
+    // console.log('userData: ', userData);
 
     return (
       <div id="sign-in">

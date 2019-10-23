@@ -6,6 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'main.js',
+    publicPath: '/'
   },
   module: {
     rules: [{
@@ -49,11 +50,13 @@ module.exports = {
   resolve: {
     alias: {
       assets: path.resolve('./img'), // Makes it easier to reference our assets in jsx files
-    },
+      'react-dom': '@hot-loader/react-dom', // Fixes Warning - React-Hot-Loader: react-🔥-dom patch is not detected. React 16.6+ features may not work.
+    }
   },
   devServer: {
     contentBase: path.join(__dirname, 'build'),
     compress: true,
-    port: 3000
+    port: 3000,
+    historyApiFallback: true
   }
 };
