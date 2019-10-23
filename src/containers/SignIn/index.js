@@ -26,10 +26,10 @@ class SignIn extends Component {
     };
   }
 
-  validateForm() {
-    const { email, password } = this.state;
-    return email.length > 0 && password.length > 0;
-  }
+  // validateForm() {
+  //   const { email, password } = this.state;
+  //   return email.length > 0 && password.length > 0;
+  // }
 
   onChangeText = (key, event) => {
     const target = event.target;
@@ -41,10 +41,10 @@ class SignIn extends Component {
     });
   }
 
-  signIn = () => {
+  signIn = (e) => {
     const { email, password, userData } = this.state;
     const { authenticate, user} = this.props;
-
+    e.preventDefault();
     Auth.signIn(email, password)
     .then(dataUser => {
       this.setState({ userData: dataUser });
@@ -69,8 +69,8 @@ class SignIn extends Component {
   // }
 
   render() {
-    const { email, password, showSignInError } = this.state;
-    // console.log('email: ', email);
+    const { email, password, showSignInError, userData } = this.state;
+    console.log('userData: ', userData);
 
     return (
       <div id="sign-in">

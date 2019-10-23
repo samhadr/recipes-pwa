@@ -4,6 +4,11 @@
       "react-hot-loader/babel",
       "@babel/plugin-proposal-object-rest-spread",
       "@babel/plugin-transform-react-jsx",
-      "@babel/plugin-transform-react-jsx-source"
+      "@babel/plugin-transform-react-jsx-source",
+      ["@babel/plugin-transform-runtime",
+        {
+          "regenerator": true
+        }
+      ]
     ]
   }

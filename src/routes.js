@@ -1,38 +1,29 @@
-import Homefinder from './containers/Homefinder';
-import Collections from './containers/Collections';
-import Amenities from './containers/Amenities';
-import NeighborhoodMap from './containers/NeighborhoodMap';
-import AreaMap from './containers/AreaMap';
-
-import Logo from './img/lantana-at-beach-logo.svg';
+import App from './containers/App';
+import SignIn from './containers/SignIn';
+import Recipes from './containers/Recipes';
+import SingleRecipe from './containers/SingleRecipe';
 
 const routes = [
   { path: '/',
     exact: true,
-    image: Logo,
     title: 'Home',
-    component: Homefinder
+    component: App
   },
-  { path: '/homefinder',
+  { path: '/sign-in',
     exact: true,
-    title: 'HomeFinder',
-    component: Homefinder
+    title: 'Sign In',
+    component: SignIn
   },
-  { path: '/collections',
-    title: 'The Collections',
-    component: Collections
-  },
-  { path: '/neighborhood-maps',
-    title: 'Neighborhood Map',
-    component: NeighborhoodMap
-  },
-  { path: '/amenities',
-    title: 'Amenities',
-    component: Amenities
-  },
-  { path: '/area',
-    title: 'The Area',
-    component: AreaMap
+  { path: '/recipes',
+    exact: true,
+    title: 'Recipes',
+    component: Recipes,
+    routes: [
+      {
+        path: "/recipes/:title",
+        component: SingleRecipe
+      }
+    ]
   }
 ];
 
