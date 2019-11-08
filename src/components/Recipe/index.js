@@ -445,7 +445,8 @@ class Recipe extends Component {
     // const recipeHeader = this.recipeHeader(),
     //       instructions = this.instructions(),
     //       editToggleButton = this.editToggleButton();
-    console.log('this.state.ingredients: ', ingredients);
+    // console.log('this.state.ingredients: ', ingredients);
+    console.log('Recipe: ', this.props.recipe);
 
     return (
       <div>

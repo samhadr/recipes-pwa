@@ -159,37 +159,46 @@ class Recipes extends Component {
     const { recipesData, recipeSlugs, currentRecipe } = this.state;
     // const slug = currentRecipe[0].title.toLowerCase().replace(' ', '-');
 
-    return currentRecipe.length > 0
+    return recipesData.length > 0
     ?
-    <Route
-      key={currentRecipe[0].recipeId}
-      path={`/recipes/:recipeId`}
-      render={({ match }) => 
-        <Recipe
-          // key={currentRecipe[0].recipeId}
-          recipe={recipesData.find(r => r.recipeId === match.params.recipeId)}
-          // slug={slug}
-          // handleActiveRecipe={this.setcurrentRecipe}
-        />
-      }
-    />
-    // recipesData.map((item, i) => {
-    //   const slug = item.title.toLowerCase().replace(' ', '-');
-    //   console.log('slug: ', slug);
-    //   console.log('this.props.path: ', this.props.path);
-    //   return (
-    //     // this.props.location.includes(recipeSlugs[i-1])
-    //     // ?
-    //     // (
-    //       <Route
-    //         key={i}
-    //         path={'/recipes/:title'}
-    //         render={props => <Recipe recipe={item} {...props} />}
-    //       />
-    //     // )
-    //     // : null
-    //   )
-    // })
+    // <Route
+    //   key={currentRecipe[0].recipeId}
+    //   path={`/recipes/:recipeId`}
+    //   render={({ match }) => 
+    //     <Recipe
+    //       // key={currentRecipe[0].recipeId}
+    //       recipe={recipesData.find(r => r.recipeId === match.params.recipeId)}
+    //       // slug={slug}
+    //       // handleActiveRecipe={this.setcurrentRecipe}
+    //     />
+    //   }
+    // />
+    recipesData.map((item, i) => {
+      const slug = item.title.toLowerCase().replace(/&|,/g, '').split(' ').join('-');
+      // console.log('slug: ', slug);
+      console.log('slug: ', slug);
+      return (
+        // this.props.location.includes(recipeSlugs[i-1])
+        // ?
+        // (
+          <Route
+            key={i}
+            path={`/recipes/${{slug}}`}
+            render={({ match }) => {
+                console.log('match.params.slug: ', match.params.slug);
+                <Recipe
+                  // key={currentRecipe[0].recipeId}
+                  recipe={slug === recipeSlugs[i-1] ? item : null}
+                  // slug={slug}
+                  // handleActiveRecipe={this.setcurrentRecipe}
+                />
+              }
+            }
+          />
+        // )
+        // : null
+      )
+    })
     :
     null
   }
