@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { API } from "aws-amplify";
 
 import { s3Path } from '../../../libs/awsLib';
+
+import Recipe from '../../components/Recipe';
 
 import Logo from '../../components/icons/Logo';
 
@@ -21,20 +23,25 @@ class Recipes extends Component {
       // isAuthenticated: false,
       isLoading: true,
       recipesData: [],
-      recipesImgPaths: []
+      recipesImgPaths: [],
+      recipeSlugs: [],
+      currentRecipe: []
     }
   }
 
   componentDidMount() {
     let recipes = sessionStorage.getItem('recipes'),
-        imgPaths = sessionStorage.getItem('imgPaths');
+        imgPaths = sessionStorage.getItem('imgPaths'),
+        slugs = sessionStorage.getItem('slugs');
 
     if (recipes) {
       recipes = JSON.parse(recipes);
       imgPaths = JSON.parse(imgPaths);
+      slugs = JSON.parse(slugs);
       this.setState({
         recipesData: recipes,
-        recipesImgPaths: imgPaths
+        recipesImgPaths: imgPaths,
+        recipeSlugs: slugs
       });
     } else {
       this.handleRecipes();
@@ -52,6 +59,7 @@ class Recipes extends Component {
       const recipesData = await this.getRecipes();
       this.setState({ recipesData });
       this.getImgPaths();
+      this.getSlugs();
       sessionStorage.setItem('recipes', JSON.stringify(recipesData));
     } catch (e) {
       console.log('recipesData error: ', e);
@@ -91,93 +99,121 @@ class Recipes extends Component {
     }
   }
 
+  async getSlugs() {
+    const { recipesData } = this.state;
+    let slugs = [];
+    if (recipesData) {
+      for (let r of recipesData) {
+        console.log('r.title: ', r.title);
+        const slug = r.title.toLowerCase().replace(/&|,/g, '').split(' ').join('-'); 
+        slugs.push(slug);
+      }
+      this.setState({
+        recipeSlugs: slugs
+      });
+      sessionStorage.setItem('slugs', JSON.stringify(slugs));
+    }
+  }
+
   renderRecipes = (recipes) => {
-    const{ recipesImgPaths } = this.state;
+    const{ recipesImgPaths, recipeSlugs } = this.state;
     console.log('recipes: ', recipes);
     return [{}].concat(recipes).map((item, i) =>
       // const slug = item.title.toLowerCase().replace(' ', '-'); 
       i !== 0
       ?
-      <div
-        key={item.recipeId}
-        className="recipe-listing"
-        onClick={this.handleRecipeClick(item)}
-      >
-        {
-          item.attachment !== null
-          ? <img
-              className="thumb"
-              src={recipesImgPaths[i-1]}
-              // style={recipeStyles.recipeThumb}
-            />
-          : <div /*style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.sageGreen, width: 50, height: 50, marginRight: 10, padding: 10 }}*/>
-              <Logo />
-            </div>
-        }
-        <div className="recipe-info">
-          <h2>{item.title}</h2>
+      <Link key={i} to={`/recipes/${recipeSlugs[i-1]}`}>
+        <div
+          // key={item.recipeId}
+          className="recipe-listing"
+          onClick={this.handleRecipeClick(item)}
+        >
+          {
+            item.attachment !== null
+            ? <img
+                className="thumb"
+                src={recipesImgPaths[i-1]}
+                // style={recipeStyles.recipeThumb}
+              />
+            : <div /*style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.sageGreen, width: 50, height: 50, marginRight: 10, padding: 10 }}*/>
+                <Logo />
+              </div>
+          }
+          <div className="recipe-info">
+            <h2>{item.title}</h2>
+          </div>
         </div>
-      </div>
+      </Link>
       : null
     )
   }
 
   handleRecipeClick = (recipe) => {
     console.log('recipe click');
-    const slug = recipe.title.toLowerCase().replace(' ', '-'); 
-    <Redirect to={`/recipes/${slug}`} />
+    // this.setState({ currentRecipe: recipe });
+    // const slug = recipe.title.toLowerCase().replace(' ', '-'); 
+    // <Redirect to={`/recipes/${slug}`} />
   }
 
-  // renderRoutes = () => {
-  //   const { recipesData } = this.state;
+  renderRoutes = () => {
+    const { recipesData, recipeSlugs, currentRecipe } = this.state;
+    // const slug = currentRecipe[0].title.toLowerCase().replace(' ', '-');
 
-  //   return recipesData.length > 0
-  //   ?
-  //   recipesData.map((item, i) => {
-  //     const slug = item.title.toLowerCase().replace(' ', '-');
-  //     console.log('slug: ', slug);
-  //     console.log('this.props.path: ', this.props.path);
-  //     return (
-  //       this.props.path.includes(this.props.path + '/' + slug)
-  //       ?
-  //       (
-  //         <Route
-  //           key={i}
-  //           path={'/recipes/:title'}
-  //           render={props => <route.component {...props} />}
-  //         />
-  //       )
-  //       : null
-  //     )
-  //   })
-  //   :
-  //   null
-  // }
+    return currentRecipe.length > 0
+    ?
+    <Route
+      key={currentRecipe[0].recipeId}
+      path={`/recipes/:recipeId`}
+      render={({ match }) => 
+        <Recipe
+          // key={currentRecipe[0].recipeId}
+          recipe={recipesData.find(r => r.recipeId === match.params.recipeId)}
+          // slug={slug}
+          // handleActiveRecipe={this.setcurrentRecipe}
+        />
+      }
+    />
+    // recipesData.map((item, i) => {
+    //   const slug = item.title.toLowerCase().replace(' ', '-');
+    //   console.log('slug: ', slug);
+    //   console.log('this.props.path: ', this.props.path);
+    //   return (
+    //     // this.props.location.includes(recipeSlugs[i-1])
+    //     // ?
+    //     // (
+    //       <Route
+    //         key={i}
+    //         path={'/recipes/:title'}
+    //         render={props => <Recipe recipe={item} {...props} />}
+    //       />
+    //     // )
+    //     // : null
+    //   )
+    // })
+    :
+    null
+  }
 
   render() {
     const { recipesData } = this.state;
+    console.log('slugs: ', this.state.recipeSlugs);
+    console.log('currentRecipe: ', this.state.currentRecipe);
     // console.log('recipesData: ', recipesData);
     // console.log('recipesImgPaths: ', recipesImgPaths);
     const showRecipes = Object.keys(recipesData).length > 0 ? this.renderRecipes(recipesData) : null;
-    // const routes = this.renderRoutes();
+    const routes = this.renderRoutes();
     // console.log('this.props.path: ', this.props.path);
 
     return (
-      <div>
-      {
-      this.props.isAuthenticated
-      ?
-      <div id="recipes">
-        <div /*onClick={() => this.props.navigation.push('CreateRecipe')}*/>
-          <p> Add Recipe</p>
+      <Router>
+        <div id="recipes">
+          <div /*onClick={() => this.props.navigation.push('CreateRecipe')}*/>
+            <p> Add Recipe</p>
+          </div>
+          {showRecipes}
         </div>
-        {showRecipes}
-      </div>
-      :
-      <Redirect to="/" />
-      }
-      {/* {routes} */}
-      </div>
+        {routes}
+      </Router>
     );
   }
 }
