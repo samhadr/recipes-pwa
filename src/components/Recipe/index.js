@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 // import {
 //   Text,
 //   TouchableOpacity,
@@ -450,6 +451,7 @@ class Recipe extends Component {
 
     return (
       <div>
+        <div className="back" onClick={() => this.props.history.goBack()}>All Recipes</div>
         <h1>{this.props.recipe.title}</h1>
       </div>
     );
@@ -457,4 +459,4 @@ class Recipe extends Component {
 
 }
 
-export default Recipe;
+export default withRouter(Recipe);

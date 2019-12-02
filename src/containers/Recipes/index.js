@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { API } from "aws-amplify";
@@ -126,7 +126,7 @@ class Recipes extends Component {
         <div
           // key={item.recipeId}
           className="recipe-listing"
-          onClick={this.handleRecipeClick(item)}
+          onClick={() => this.handleRecipeClick(item)}
         >
           {
             item.attachment !== null
@@ -150,9 +150,6 @@ class Recipes extends Component {
 
   handleRecipeClick = (recipe) => {
     console.log('recipe click');
-    // this.setState({ currentRecipe: recipe });
-    // const slug = recipe.title.toLowerCase().replace(' ', '-'); 
-    // <Redirect to={`/recipes/${slug}`} />
   }
 
   renderRoutes = () => {
@@ -161,42 +158,30 @@ class Recipes extends Component {
 
     return recipesData.length > 0
     ?
-    // <Route
-    //   key={currentRecipe[0].recipeId}
-    //   path={`/recipes/:recipeId`}
-    //   render={({ match }) => 
-    //     <Recipe
-    //       // key={currentRecipe[0].recipeId}
-    //       recipe={recipesData.find(r => r.recipeId === match.params.recipeId)}
-    //       // slug={slug}
-    //       // handleActiveRecipe={this.setcurrentRecipe}
-    //     />
-    //   }
-    // />
     recipesData.map((item, i) => {
       const slug = item.title.toLowerCase().replace(/&|,/g, '').split(' ').join('-');
-      // console.log('slug: ', slug);
       console.log('slug: ', slug);
+      console.log('recipeSlugs[i-1]: ', recipeSlugs[i]);
       return (
-        // this.props.location.includes(recipeSlugs[i-1])
-        // ?
-        // (
+        slug === recipeSlugs[i]
+        ?
+        (
           <Route
             key={i}
-            path={`/recipes/${{slug}}`}
-            render={({ match }) => {
-                console.log('match.params.slug: ', match.params.slug);
+            path={`/recipes/${slug}`}
+            render={() => 
+                // console.log('match.params.slug: ', match.params.slug);
                 <Recipe
                   // key={currentRecipe[0].recipeId}
-                  recipe={slug === recipeSlugs[i-1] ? item : null}
+                  recipe={item}
                   // slug={slug}
                   // handleActiveRecipe={this.setcurrentRecipe}
                 />
-              }
+              
             }
           />
-        // )
-        // : null
+        )
+        : null
       )
     })
     :
@@ -211,20 +196,24 @@ class Recipes extends Component {
     // console.log('recipesImgPaths: ', recipesImgPaths);
     const showRecipes = Object.keys(recipesData).length > 0 ? this.renderRecipes(recipesData) : null;
     const routes = this.renderRoutes();
-    // console.log('this.props.path: ', this.props.path);
+    console.log('routes: ', routes);
+    console.log('this.props: ', this.props);
 
     return (
-      <Router>
+      this.props.location.pathname === '/recipes'
+      ?
         <div id="recipes">
           <div /*onClick={() => this.props.navigation.push('CreateRecipe')}*/>
             <p> Add Recipe</p>
           </div>
           {showRecipes}
         </div>
-        {routes}
-      </Router>
+      :
+        <Router>
+          {routes}
+        </Router>
     );
   }
 }
 
-export default Recipes;
+export default withRouter(Recipes);

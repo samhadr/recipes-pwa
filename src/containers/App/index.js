@@ -107,41 +107,15 @@ class App extends Component {
         {
           checkAuthenticated ?
           (
-            // <Redirect
-            //   to={{
-            //     pathname: "/recipes",
-            //     state: { isAuthenticated: checkAuthenticated }
-            //   }}
-            // />
             <Recipes
               isAuthenticated={checkAuthenticated}
             />
-            // ,
-            // <Route
-            //   exact={true}
-            //   path="/recipes"
-            //   component={Recipes}
-            // />
           )
           :
-            // <Redirect
-            //   to={{
-            //     pathname: "/sign-in",
-            //     state: {
-            //       authenticate: this.authenticate,
-            //       user: this.user
-            //     }
-            //   }}
-            // />
             <SignIn
               authenticate={this.authenticate}
               user={this.user}
             />
-            // ,
-            // <Route
-            //   path="/"
-            //   component={SignIn}
-            // />
         }
         {/* {
           routes.map((route) => (
@@ -154,22 +128,6 @@ class App extends Component {
         } */}
         </div>
       </Router>
-      // <div id="appWrapper">
-      //   {
-      //     checkAuthenticated ?
-      //     (
-      //       routes.map((route, i) => (
-      //         <Recipes key={i} isAuthenticated={checkAuthenticated} {...route} />
-      //       )),
-      //       <Redirect to="/recipes" />
-      //     )
-      //     :
-      //       <SignIn
-      //         authenticate={this.authenticate}
-      //         user={this.user}
-      //       />
-      //   }
-      // </div>
     )
   }
 }

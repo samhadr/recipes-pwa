@@ -1,7 +1,7 @@
 import App from './containers/App';
 import SignIn from './containers/SignIn';
 import Recipes from './containers/Recipes';
-import SingleRecipe from './containers/SingleRecipe';
+import SingleRecipe from './components/Recipe';
 
 const routes = [
   { path: '/',
