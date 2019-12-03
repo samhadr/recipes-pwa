@@ -3,19 +3,15 @@ import React, { Component } from 'react';
 
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation
+  Redirect
 } from 'react-router-dom';
 
 import routes from '../../routes';
 
 // import Amplify from 'aws-amplify';
 // import awsconfig from '../../aws-exports';
-// import { withAuthenticator } from 'aws-amplify-react';
+import { withAuthenticator } from 'aws-amplify-react';
 
 // Amplify.configure(awsconfig);
 
@@ -47,7 +43,7 @@ Amplify.configure({
 
 import SignIn from '../SignIn';
 import Recipes from '../../containers/Recipes';
-import Test from '../../containers/Test';
+import SignOut from '../../components/SignOut';
 
 import './index.scss';
 
@@ -88,6 +84,12 @@ class App extends Component {
     sessionStorage.setItem('isAuthenticated', isAuthenticated);
   }
 
+  signOut = () => {
+    // this.setState({ isAuthenticated: false });
+    sessionStorage.clear();
+    this.props.history.replace('/');
+  }
+
   user = (user) => {
     const { isAuthenticated } = this.state;
     isAuthenticated ? this.setState({ currentUser: user }) : null;
@@ -104,24 +106,66 @@ class App extends Component {
     return (
       <Router>
         <div id="app">
-        {
-          checkAuthenticated ?
-          (
-            <Recipes
-              isAuthenticated={checkAuthenticated}
-            />
-          )
-          :
-            <SignIn
-              authenticate={this.authenticate}
-              user={this.user}
-            />
-        }
+          {
+            checkAuthenticated
+            ?
+            // <div className="sign-out" onClick={() => this.signOut()}>Sign Out</div>
+            <SignOut/>
+            :
+            null
+          }
+          {
+            !checkAuthenticated
+            ?
+              // <Recipes
+              //   isAuthenticated={checkAuthenticated}
+              // />
+              <SignIn
+                authenticate={this.authenticate}
+                user={this.user}
+              />
+              // <Redirect
+              //   to={{
+              //     pathname: "/recipes",
+              //     // search: "?utm=your+face",
+              //     state: { isAuthenticated: checkAuthenticated }
+              //   }}
+              // />
+            :
+              <Recipes
+                isAuthenticated={checkAuthenticated}
+              />
+              // <SignIn
+              //   authenticate={this.authenticate}
+              //   user={this.user}
+              // />
+              // routes.map((route, i) => (
+              //   <Route
+              //     key={i}
+              //     path={route.path}
+              //     exact={route.exact}
+              //     render={(routeProps) => <Recipes isAuthenticated={checkAuthenticated} />}
+              //     // component={route.component}
+              //   />
+              // ))
+              // <Redirect
+              //   to={{
+              //     pathname: "/sign-in",
+              //     // search: "?utm=your+face",
+              //     state: {
+              //       authenticate: this.authenticate,
+              //       user: this.user
+              //     }
+              //   }}
+              // />
+          }
         {/* {
-          routes.map((route) => (
+          routes.map((route, i) => (
             <Route
-              key={route.path}
+              key={i}
               path={route.path}
+              exact={route.exact}
+              // render={(routeProps) => <route.component {...routeProps} {...route}/>}
               component={route.component}
             />
           ))
@@ -132,4 +176,4 @@ class App extends Component {
   }
 }
 
-export default hot(App);
+export default hot(withAuthenticator(App));

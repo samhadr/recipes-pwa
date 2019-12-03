@@ -1,0 +1,28 @@
+#single-recipe {
+
+  .recipe-img {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 0 2rem;
+  }
+
+  .recipe-ingredients {
+    margin: 0 0 2rem;
+
+    .single-ingredient {
+      margin: 0 0 1rem;
+    }
+
+    span {
+      margin-right: 0.25rem;
+
+      &.amount {
+        margin-right: 1rem;
+      }
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+}

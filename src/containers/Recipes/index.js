@@ -153,7 +153,7 @@ class Recipes extends Component {
   }
 
   renderRoutes = () => {
-    const { recipesData, recipeSlugs, currentRecipe } = this.state;
+    const { recipesData, recipeSlugs, recipesImgPaths } = this.state;
     // const slug = currentRecipe[0].title.toLowerCase().replace(' ', '-');
 
     return recipesData.length > 0
@@ -174,6 +174,7 @@ class Recipes extends Component {
                 <Recipe
                   // key={currentRecipe[0].recipeId}
                   recipe={item}
+                  imgPath={recipesImgPaths[i]}
                   // slug={slug}
                   // handleActiveRecipe={this.setcurrentRecipe}
                 />
@@ -189,6 +190,7 @@ class Recipes extends Component {
   }
 
   render() {
+    const { isAuthenticated } = this.props;
     const { recipesData } = this.state;
     console.log('slugs: ', this.state.recipeSlugs);
     console.log('currentRecipe: ', this.state.currentRecipe);
@@ -202,7 +204,8 @@ class Recipes extends Component {
     return (
       this.props.location.pathname === '/recipes'
       ?
-        <div id="recipes">
+        <div id="recipes" className="container">
+          { isAuthenticated ? <div className="sign-out" onClick={() => this.signOut()}>Sign Out</div> : null }
           <div /*onClick={() => this.props.navigation.push('CreateRecipe')}*/>
             <p> Add Recipe</p>
           </div>

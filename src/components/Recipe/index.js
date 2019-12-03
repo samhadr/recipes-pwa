@@ -29,7 +29,8 @@ class Recipe extends Component {
     // isAuthenticated: PropTypes.bool,
     // user: PropTypes.object,
     // userId: PropTypes.string
-    recipe: PropTypes.object
+    recipe: PropTypes.object,
+    imgPath: PropTypes.string
   }
 
   constructor(props) {
@@ -438,21 +439,37 @@ class Recipe extends Component {
   //   )
   // }
 
+  renderIngredients = () => {
+    const { recipe } = this.props;
+    recipe.ingredients
+  }
+
   render() {
     const {
-      ingredients,
-      editMode
-    } = this.state;
+      recipe,
+      imgPath
+    } = this.props;
     // const recipeHeader = this.recipeHeader(),
     //       instructions = this.instructions(),
     //       editToggleButton = this.editToggleButton();
-    // console.log('this.state.ingredients: ', ingredients);
-    console.log('Recipe: ', this.props.recipe);
+    console.log('recipe.ingredients.length: ', recipe.ingredients.length);
+    console.log('Recipe: ', recipe);
 
     return (
-      <div>
-        <div className="back" onClick={() => this.props.history.goBack()}>All Recipes</div>
-        <h1>{this.props.recipe.title}</h1>
+      <div id="single-recipe" className="container">
+        <div className="back" onClick={() => this.props.history.goBack()}>&lt; All Recipes</div>
+        <h1 className="recipe-title">{recipe.title}</h1>
+        <img className="recipe-img" src={imgPath}/>
+        <div className="recipe-ingredients">
+          {recipe.ingredients.map((item, i) => 
+            <div className="single-ingredient" key={i}>
+              <span className="amount">{item.amount}</span>
+              <span>{item.unit}</span>
+              <span>{item.name}</span>
+            </div>
+          )}
+        </div>
+        <div className="recipe-instructions">{recipe.instructions}</div>
       </div>
     );
   }
