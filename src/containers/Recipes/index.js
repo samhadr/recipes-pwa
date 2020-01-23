@@ -205,7 +205,7 @@ class Recipes extends Component {
       this.props.location.pathname === '/recipes'
       ?
         <div id="recipes" className="container">
-          { isAuthenticated ? <div className="sign-out" onClick={() => this.signOut()}>Sign Out</div> : null }
+          {/* { isAuthenticated ? <div className="sign-out" onClick={() => this.signOut()}>Sign Out</div> : null } */}
           <div /*onClick={() => this.props.navigation.push('CreateRecipe')}*/>
             <p> Add Recipe</p>
           </div>

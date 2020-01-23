@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import {
   BrowserRouter as Router,
-  Route,
+  Link,
   Redirect
 } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ Amplify.configure({
 
 import SignIn from '../SignIn';
 import Recipes from '../../containers/Recipes';
-import SignOut from '../../components/SignOut';
+// import SignOut from '../../components/SignOut';
 
 import './index.scss';
 
@@ -85,9 +85,8 @@ class App extends Component {
   }
 
   signOut = () => {
-    // this.setState({ isAuthenticated: false });
+    this.setState({ isAuthenticated: false });
     sessionStorage.clear();
-    this.props.history.replace('/');
   }
 
   user = (user) => {
@@ -101,75 +100,27 @@ class App extends Component {
     const checkAuthenticated = !!sessionStorage.getItem('isAuthenticated');
     // const checkAuth = this.checkAuth();
 
-    console.log('App isAuthenticated: ', isAuthenticated);
+    console.log('isAuthenticated: ', isAuthenticated);
+    console.log('checkAuthenticated: ', checkAuthenticated);
 
     return (
       <Router>
         <div id="app">
-          {
-            checkAuthenticated
-            ?
-            // <div className="sign-out" onClick={() => this.signOut()}>Sign Out</div>
-            <SignOut/>
-            :
-            null
-          }
-          {
-            !checkAuthenticated
-            ?
-              // <Recipes
-              //   isAuthenticated={checkAuthenticated}
-              // />
+            {
+              checkAuthenticated
+              ?
+              <div className="authenticated-wrap">
+                <Link to="/" className="sign-out" onClick={() => this.signOut()}>Sign Out</Link>
+                <Recipes
+                  isAuthenticated={checkAuthenticated}
+                />
+              </div>
+              :
               <SignIn
                 authenticate={this.authenticate}
                 user={this.user}
               />
-              // <Redirect
-              //   to={{
-              //     pathname: "/recipes",
-              //     // search: "?utm=your+face",
-              //     state: { isAuthenticated: checkAuthenticated }
-              //   }}
-              // />
-            :
-              <Recipes
-                isAuthenticated={checkAuthenticated}
-              />
-              // <SignIn
-              //   authenticate={this.authenticate}
-              //   user={this.user}
-              // />
-              // routes.map((route, i) => (
-              //   <Route
-              //     key={i}
-              //     path={route.path}
-              //     exact={route.exact}
-              //     render={(routeProps) => <Recipes isAuthenticated={checkAuthenticated} />}
-              //     // component={route.component}
-              //   />
-              // ))
-              // <Redirect
-              //   to={{
-              //     pathname: "/sign-in",
-              //     // search: "?utm=your+face",
-              //     state: {
-              //       authenticate: this.authenticate,
-              //       user: this.user
-              //     }
-              //   }}
-              // />
-          }
-        {/* {
-          routes.map((route, i) => (
-            <Route
-              key={i}
-              path={route.path}
-              exact={route.exact}
-              // render={(routeProps) => <route.component {...routeProps} {...route}/>}
-              component={route.component}
-            />
-          ))
-        } */}
+            }
         </div>
       </Router>
     )

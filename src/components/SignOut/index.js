@@ -16,15 +16,15 @@ class SignOut extends Component {
 
   signUserOut = async () => {
     // e.preventDefault();
-    await Auth.signOut()
-    .then(() => {
+    // await Auth.signOut()
+    // .then(() => {
       // this.setState({ userData: dataUser });
       console.log('sign out success');
       sessionStorage.clear();
-    })
+    // })
     // .then(() => authenticate(true))
     // .then(() => user(userData))
-    .then(() => {
+    // .then(() => {
       console.log('redirect to home');
       this.props.history.push('/');
       // <Router>
@@ -35,11 +35,11 @@ class SignOut extends Component {
       //     }}
       //   />
       // </Router>
-    })
-    .catch(err => {
-      console.log(`sign out ERROR: ${err.message}`, err);
+    // })
+    // .catch(err => {
+    //   console.log(`sign out ERROR: ${err.message}`, err);
       // this.setState({ showSignInError: true })
-    });
+    // });
   }
 
   render() {

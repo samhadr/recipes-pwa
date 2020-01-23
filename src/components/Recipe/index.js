@@ -441,7 +441,19 @@ class Recipe extends Component {
 
   renderIngredients = () => {
     const { recipe } = this.props;
-    recipe.ingredients
+    console.log('typeof recipe.ingredients: ', typeof recipe.ingredients);
+
+    return recipe.ingredients && typeof recipe.ingredients !== 'string'
+    ?
+    recipe.ingredients.map((item, i) => 
+      <div className="single-ingredient" key={i}>
+        <span className="amount">{item.amount}</span>
+        <span>{item.unit}</span>
+        <span>{item.name}</span>
+      </div>
+    )
+    :
+    <p>{recipe.ingredients}</p>
   }
 
   render() {
@@ -449,10 +461,11 @@ class Recipe extends Component {
       recipe,
       imgPath
     } = this.props;
+    const ingredients = this.renderIngredients();
     // const recipeHeader = this.recipeHeader(),
     //       instructions = this.instructions(),
     //       editToggleButton = this.editToggleButton();
-    console.log('recipe.ingredients.length: ', recipe.ingredients.length);
+    // console.log('recipe.ingredients.length: ', recipe.ingredients.length);
     console.log('Recipe: ', recipe);
 
     return (
@@ -461,13 +474,14 @@ class Recipe extends Component {
         <h1 className="recipe-title">{recipe.title}</h1>
         <img className="recipe-img" src={imgPath}/>
         <div className="recipe-ingredients">
-          {recipe.ingredients.map((item, i) => 
+          {ingredients}
+          {/* {recipe.ingredients.map((item, i) => 
             <div className="single-ingredient" key={i}>
               <span className="amount">{item.amount}</span>
               <span>{item.unit}</span>
               <span>{item.name}</span>
             </div>
-          )}
+          )} */}
         </div>
         <div className="recipe-instructions">{recipe.instructions}</div>
       </div>
