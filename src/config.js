@@ -2,7 +2,7 @@ export default {
   s3: {
     REGION: "us-west-1",
     BUCKET: "recipes-upload",
-    MAX_FILE_SIZE: 5000000
+    MAX_FILE_SIZE: 1000000
   },
   apiGateway: {
     REGION: "us-west-2",

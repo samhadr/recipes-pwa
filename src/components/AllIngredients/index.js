@@ -7,7 +7,9 @@ import SingleIngredient from '../SingleIngredient';
 class AllIngredients extends Component {
   static propTypes = {
     ingredients: PropTypes.array,
-    editMode: PropTypes.bool
+    editMode: PropTypes.bool,
+    onIngredientsChange: PropTypes.func,
+    onIngredientDelete: PropTypes.func
   }
 
   constructor(props) {
