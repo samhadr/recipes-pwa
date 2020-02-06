@@ -207,7 +207,7 @@ class Recipes extends Component {
         <div id="recipes" className="container">
           {/* { isAuthenticated ? <div className="sign-out" onClick={() => this.signOut()}>Sign Out</div> : null } */}
           <div /*onClick={() => this.props.navigation.push('CreateRecipe')}*/>
-            <p> Add Recipe</p>
+            <Link to="/create-recipe" className="create-recipe">Create Recipe</Link>
           </div>
           {showRecipes}
         </div>

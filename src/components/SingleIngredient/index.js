@@ -45,7 +45,10 @@ class SingleIngredient extends Component {
     });
   }
 
-  onChangeText = (key, value) => {
+  onChangeText = (key, event) => {
+    const target = event.target;
+    const value = target.value;
+
     this.setState({
       [key]: value
     });
@@ -73,8 +76,8 @@ class SingleIngredient extends Component {
           <input
             type="text"
             // style={[formStyles.textInput, formStyles.textEdit, { flex: 1 }]}
-            value={amount}
-            onChangeText={value => this.onChangeText('amount', value)}
+            value={amount ? amount : ''}
+            onChange={value => this.onChangeText('amount', value)}
             // onBlur={() => this.handleChange(index, 'amount', amount)}
             placeholder={amount ? amount : 'amount'}
             // underlineColorAndroid="transparent"
@@ -82,8 +85,8 @@ class SingleIngredient extends Component {
           <input
             type="text"
             // style={[formStyles.textInput, formStyles.textEdit, { flex: 3 }]}
-            value={unit}
-            onChangeText={value => this.onChangeText('unit', value)}
+            value={unit ? unit : ''}
+            onChange={value => this.onChangeText('unit', value)}
             // onBlur={() => this.handleChange(index, 'unit', unit)}
             placeholder={unit ? unit : 'unit'}
             // underlineColorAndroid="transparent"
@@ -91,8 +94,8 @@ class SingleIngredient extends Component {
           <input
             type="text"
             // style={[formStyles.textInput, formStyles.textEdit, { flex: 8 }]}
-            value={name}
-            onChangeText={value => this.onChangeText('name', value)}
+            value={name ? name : ''}
+            onChange={value => this.onChangeText('name', value)}
             // onBlur={() => this.handleChange(index, 'name', name)}
             placeholder={name ? name : 'name'}
             // underlineColorAndroid="transparent"

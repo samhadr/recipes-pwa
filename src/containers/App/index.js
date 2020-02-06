@@ -1,8 +1,10 @@
 import { hot } from 'react-hot-loader/root';
 import React, { Component } from 'react';
+import CreateRecipe from '../../components/CreateRecipe';
 
 import {
   BrowserRouter as Router,
+  Route,
   Link,
   Redirect
 } from 'react-router-dom';
@@ -113,6 +115,12 @@ class App extends Component {
                 <Link to="/" className="sign-out" onClick={() => this.signOut()}>Sign Out</Link>
                 <Recipes
                   isAuthenticated={checkAuthenticated}
+                />
+                <Route
+                  // key={index}
+                  path="/create-recipe"
+                  exact={true}
+                  component={CreateRecipe}
                 />
               </div>
               :

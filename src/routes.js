@@ -2,6 +2,7 @@ import App from './containers/App';
 import SignIn from './containers/SignIn';
 import Recipes from './containers/Recipes';
 import SingleRecipe from './components/Recipe';
+import CreateRecipe from './components/CreateRecipe';
 
 const routes = [
   { path: '/',
@@ -24,6 +25,11 @@ const routes = [
         component: SingleRecipe
       }
     ]
+  },
+  { path: '/create-recipe',
+    exact: true,
+    title: 'Create Recipe',
+    component: CreateRecipe
   }
 ];
 

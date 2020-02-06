@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-  Button,
-  Image,
-  Platform
-} from 'react-native';
+// import {
+//   Text,
+//   TouchableOpacity,
+//   View,
+//   TextInput,
+//   Button,
+//   Image,
+//   Platform
+// } from 'react-native';
 
-import { ImagePicker, Permissions, FileSystem } from 'expo';
+// import { ImagePicker, Permissions, FileSystem } from 'expo';
 
 import { API } from 'aws-amplify';
-import config from '../config';
-import { s3Upload } from '../libs/awsLib';
+import config from '../../config';
+import { s3Upload } from '../../libs/awsLib';
 
-import AllIngredients from '../components/AllIngredients';
-import AddIngredient from '../components/AddIngredient';
+import AllIngredients from '../AllIngredients';
+import AddIngredient from '../AddIngredient';
 
-import globalStyles from '../styles/GlobalStyles';
-import formStyles from '../styles/FormStyles';
+// import globalStyles from '../styles/GlobalStyles';
+// import formStyles from '../styles/FormStyles';
 
 class CreateRecipe extends Component {
   static propTypes = {
@@ -45,7 +45,10 @@ class CreateRecipe extends Component {
     }
   }
 
-  onChangeText = (key, value) => {
+  onChangeText = (key, event) => {
+    const target = event.target;
+    const value = target.value;
+
     this.setState({
       [key]: value
     });
@@ -88,38 +91,38 @@ class CreateRecipe extends Component {
     });
   }
 
-  handleImageButton = async () => {
-    if (Platform.OS === 'ios') {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status === 'granted') {
-        this.chooseImage();
-      } else {
-        const error = 'Camera Roll permission not granted';
-        console.log('error: ', error);
-        throw new Error(error);
-      }
-    } else {
-      this.chooseImage();
-    }
-  }
+  // handleImageButton = async () => {
+  //   if (Platform.OS === 'ios') {
+  //     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  //     if (status === 'granted') {
+  //       this.chooseImage();
+  //     } else {
+  //       const error = 'Camera Roll permission not granted';
+  //       console.log('error: ', error);
+  //       throw new Error(error);
+  //     }
+  //   } else {
+  //     this.chooseImage();
+  //   }
+  // }
 
-  chooseImage = () => {
-    ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    })
-    .then(result => {
-      if (result && !result.cancelled) {
-        this.setState({
-          imageObject: result,
-          image: result.uri
-        });
-      }
-    })
-    .catch((err) => {
-        console.log('ImagePicker error: ', err);
-    });
-  }
+  // chooseImage = () => {
+  //   ImagePicker.launchImageLibraryAsync({
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //   })
+  //   .then(result => {
+  //     if (result && !result.cancelled) {
+  //       this.setState({
+  //         imageObject: result,
+  //         image: result.uri
+  //       });
+  //     }
+  //   })
+  //   .catch((err) => {
+  //       console.log('ImagePicker error: ', err);
+  //   });
+  // }
 
   addIngredient = () => {
     const { ingredients } = this.state;
@@ -162,6 +165,7 @@ class CreateRecipe extends Component {
     const { title, instructions, imageObject, image, ingredients } = this.state;
     console.log('imageObject: ', imageObject);
     console.log('image: ', image);
+    console.log('create recipe pathname: ', this.props.location.pathname);
 
     return (
       <div id="create-recipe" className="container">
@@ -169,9 +173,9 @@ class CreateRecipe extends Component {
           <input
             type="text"
             value={title}
-            onChangeText={value => this.onChangeText('title', value)}
+            onChange={value => this.onChangeText('title', value)}
             placeholder="Recipe Title"
-            autofocus={true}
+            // autofocus={true}
           />
           <AllIngredients
             ingredients={ingredients}
@@ -187,10 +191,15 @@ class CreateRecipe extends Component {
             multiline
             numberOfLines={5}
             value={instructions}
-            onChangeText={value => this.onChangeText('instructions', value)}
+            onChange={value => this.onChangeText('instructions', value)}
             placeholder="Instructions"
-          />  
-          {
+          />
+          <input
+            type="file"
+            id="recipe-img" name="recipe-img"
+            accept="image/png, image/jpeg"
+          />
+          {/* {
             image
             ? <Image
                 style={{
@@ -200,8 +209,8 @@ class CreateRecipe extends Component {
                 source={{ uri: image }}
               />
             : null
-          }
-          <button onClick={this.handleImageButton}>Load Images</button>
+          } */}
+          {/* <button onClick={this.handleImageButton}>Load Images</button> */}
           <button
           type="submit"
             onClick={this.handleCreate}
