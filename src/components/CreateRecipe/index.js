@@ -22,6 +22,8 @@ import AddIngredient from '../AddIngredient';
 // import globalStyles from '../styles/GlobalStyles';
 // import formStyles from '../styles/FormStyles';
 
+import './index.scss';
+
 class CreateRecipe extends Component {
   static propTypes = {
     authenticate: PropTypes.func,
@@ -43,6 +45,8 @@ class CreateRecipe extends Component {
       imageObject: null,
       image: ''
     }
+
+    // this.file = null;
   }
 
   onChangeText = (key, event) => {
@@ -54,38 +58,46 @@ class CreateRecipe extends Component {
     });
   }
 
-  handleCreate = async () => {
-    console.log('handle create');
+  handleFileChange = (event) => {
+    this.setState({ imageObject: event.target.files[0] });
+  }
 
-    let fileInfo = await FileSystem.getInfoAsync(this.state.image, { size: true });
-    console.log('file size: ', fileInfo.size);
-  
-    if (this.state.imageObject && (fileInfo.size > config.s3.MAX_FILE_SIZE)) {
-      alert("Please choose a file smaller than 5MB");
+  handleCreate = async () => {
+    const { title, ingredients, instructions, imageObject } = this.state;
+    console.log('handle create');
+    console.log('title: ', title);
+    console.log('ingredients: ', ingredients);
+    console.log('instructions: ', instructions);
+    console.log('imageObject: ', imageObject);
+
+    if (imageObject && imageObject.size > config.s3.MAX_FILE_SIZE) {
+      alert(`Please pick a file smaller than ${config.MAX_FILE_SIZE/1000000} MB.`);
       return;
     }
   
     this.setState({ isCreating: true });
   
     try {
-      const attachment = this.state.imageObject
-        ? await s3Upload(this.state.imageObject)
+      const attachment = imageObject
+        ? await s3Upload(imageObject)
         : null;
       
       await this.createRecipe({
-        title: this.state.title,
-        ingredients: this.state.ingredients,
-        instructions: this.state.instructions,
+        title: title,
+        ingredients: ingredients,
+        instructions: instructions,
         attachment
-      });
-      this.props.navigation.goBack();
+      }).then(console.log('createrecipe finish'));
+      this.props.history.push('/recipes');
     } catch (e) {
+      console.log('handle create error: ', e);
       console.log(e);
       this.setState({ isCreating: false });
     }
   }
 
   createRecipe = (recipe) => {
+    console.log('createRecipe recipe: ', recipe);
     return API.post('recipes', '/recipes', {
       body: recipe
     });
@@ -166,9 +178,11 @@ class CreateRecipe extends Component {
     console.log('imageObject: ', imageObject);
     console.log('image: ', image);
     console.log('create recipe pathname: ', this.props.location.pathname);
+    console.log('history: ', this.props.history);
 
     return (
       <div id="create-recipe" className="container">
+        <div className="back" onClick={() => this.props.history.goBack()}>&lt; All Recipes</div>
         <form className="form-box">
           <input
             type="text"
@@ -186,10 +200,8 @@ class CreateRecipe extends Component {
           <AddIngredient
             handleOnPress={() => this.addIngredient()}
           />
-          <input
-            type="text"
-            multiline
-            numberOfLines={5}
+          <textarea
+            rows="7"
             value={instructions}
             onChange={value => this.onChangeText('instructions', value)}
             placeholder="Instructions"
@@ -198,6 +210,7 @@ class CreateRecipe extends Component {
             type="file"
             id="recipe-img" name="recipe-img"
             accept="image/png, image/jpeg"
+            onChange={this.handleFileChange}
           />
           {/* {
             image
